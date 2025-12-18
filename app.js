@@ -47,9 +47,19 @@
     return `https://www.google.com/search?q=${encodeURIComponent(q)}`;
   }
 
+  let __scrollY = 0;
   function setBodyLock(locked){
-    document.body.style.overflow = locked ? 'hidden' : '';
-    document.body.style.touchAction = locked ? 'none' : '';
+    if(locked){
+      __scrollY = window.scrollY || document.documentElement.scrollTop || 0;
+      document.body.classList.add('no-scroll');
+      document.body.style.top = `-${__scrollY}px`;
+    } else {
+      document.body.classList.remove('no-scroll');
+      const top = document.body.style.top;
+      document.body.style.top = '';
+      const y = top ? Math.abs(parseInt(top,10) || 0) : __scrollY;
+      window.scrollTo(0, y);
+    }
   }
 
   function openSheet(item){
@@ -68,15 +78,40 @@
 
     sheet.hidden = false;
     sheetBackdrop.hidden = false;
+    sheet.setAttribute('aria-hidden','false');
+    sheetBackdrop.setAttribute('aria-hidden','false');
+    // trigger transition
+    requestAnimationFrame(()=>{
+      sheet.classList.add('is-open');
+      sheetBackdrop.classList.add('is-open');
+    });
     setBodyLock(true);
   }
   function closeSheet(){
-    sheet.hidden = true;
-    sheetBackdrop.hidden = true;
+    sheet.classList.remove('is-open');
+    sheetBackdrop.classList.remove('is-open');
+    sheet.setAttribute('aria-hidden','true');
+    sheetBackdrop.setAttribute('aria-hidden','true');
+
+    const finalize = ()=>{
+      sheet.hidden = true;
+      sheetBackdrop.hidden = true;
+      sheet.removeEventListener('transitionend', finalize);
+    };
+    sheet.addEventListener('transitionend', finalize);
+
+    // fallback in case transitionend doesn't fire
+    setTimeout(()=>{
+      if(!sheet.hidden){
+        sheet.hidden = true;
+        sheetBackdrop.hidden = true;
+      }
+    }, 280);
+
     setBodyLock(false);
   }
 
-  sheetClose.addEventListener('click', closeSheet);
+  sheetClose.addEventListener('click', closeSheet)('click', closeSheet);
   sheetBackdrop.addEventListener('click', closeSheet);
 
   // Swipe down to close (simple)
@@ -84,7 +119,10 @@
   sheet.addEventListener('touchstart', (e)=>{ startY=e.touches[0].clientY; lastY=startY; }, {passive:true});
   sheet.addEventListener('touchmove', (e)=>{ lastY=e.touches[0].clientY; }, {passive:true});
   sheet.addEventListener('touchend', ()=>{
-    if(startY!==null && lastY!==null && (lastY-startY)>90){ closeSheet(); }
+    if(startY!==null && lastY!==null){
+      const dy = lastY - startY;
+      if(dy > 90 || dy < -90){ closeSheet(); }
+    }
     startY=null; lastY=null;
   });
 

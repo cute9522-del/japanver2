@@ -279,3 +279,41 @@ body{
   border-top: 1px solid var(--hairline);
 }
 .sheet-footer .btn{ flex: 1 1 0; text-align:center; }
+
+
+/* --- Sheet visibility & iOS-friendly scroll lock --- */
+[hidden]{ display:none !important; }
+
+body.no-scroll{
+  position: fixed;
+  width: 100%;
+  overflow: hidden;
+}
+
+.sheet-backdrop{
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .18s ease;
+}
+
+.sheet{
+  transform: translateY(110%);
+  transition: transform .22s ease;
+  pointer-events: none;
+}
+
+.sheet.is-open{
+  transform: translateY(0%);
+  pointer-events: auto;
+}
+
+.sheet-backdrop.is-open{
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.sheet-body{
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+}
