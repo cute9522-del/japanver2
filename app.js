@@ -1,4 +1,17 @@
-(() => {
+document.addEventListener("DOMContentLoaded", () => {
+
+  (() => {
+    const sheetClose = document.querySelector("#sheetClose");
+    const sheetBackdrop = document.querySelector("#sheetBackdrop");
+
+    if (sheetClose) {
+      sheetClose.addEventListener("click", closeSheet);
+    }
+    if (sheetBackdrop) {
+      sheetBackdrop.addEventListener("click", closeSheet);
+    }
+    // 其餘 app.js 原本內容「全部原封不動放這裡」
+    (() => {
   const $ = (sel, root=document) => root.querySelector(sel);
   const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
 
@@ -268,3 +281,7 @@
   $("#bootNotice")?.remove();
   render();
 })();
+  })();
+
+});
+
