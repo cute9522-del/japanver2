@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>日本行程</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <meta name="theme-color" content="#0f1113" />
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="topbar-row">
+        <button class="tab-btn is-active" data-tab="toc">目錄</button>
+        <button class="tab-btn" data-tab="itinerary">每日行程</button>
+        <button class="tab-btn" data-tab="transport">交通</button>
+        <button class="tab-btn" data-tab="flights">航班</button>
+        <button class="tab-btn" data-tab="lodging">住宿</button>
+        <button class="tab-btn" data-tab="cloud">雲端</button>
+      </div>
+      <div class="topbar-row daybar is-hidden" id="daybar"></div>
+    </header>
+
+    <main class="main" id="main">
+      <div class="notice" id="bootNotice">載入中…</div>
+    </main>
+
+    <div class="sheet-backdrop is-hidden" id="sheetBackdrop" aria-hidden="true"></div>
+    <section class="sheet is-hidden" id="sheet" aria-hidden="true">
+      <div class="sheet-grabber" title="可上滑/下滑關閉"></div>
+      <button class="sheet-close" id="sheetClose" aria-label="關閉">×</button>
+      <div class="sheet-body" id="sheetBody"></div>
+      <div class="sheet-actions" id="sheetActions"></div>
+    </section>
+  </div>
+
+  <script src="./data.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
